@@ -71,7 +71,7 @@ class Main(Login):
             "Review": (
                 constants.REVIEW_NUMBERS,
                 constants.REVIEW_TITLES,
-                constants.REVIEW_TITLES,
+                constants.REVIEW_EFFORT,
             ),
             "Done": (
                 constants.DONE_NUMBERS,
@@ -99,14 +99,14 @@ class Main(Login):
                         {
                             "PBI": number.text,
                             "DESCRIÇÃO": title.text,
-                            "STATUS": "",
+                            "STATUS": " ",
                             "EFFORT": effort.text.replace("Effort\n", ""),
                             "FEATURE": "NÃO",
                         }
                     )
 
     @classmethod
-    def remove_garbage(cls):
+    def remove_garbage(cls) -> None:
         sustentacao = constants.SUSTENTACAO
         for backlog in cls.backlogs:
             description: str = re.sub(sustentacao, "", backlog["DESCRIÇÃO"])
@@ -163,13 +163,15 @@ class Main(Login):
         return pbi
 
     @classmethod
-    def get_relatorio(cls):
+    def get_relatorio(cls) -> None:
         planilha = pd.DataFrame(data=cls.backlogs)
         planilha.to_excel("Relatório de PBI.xlsx", index=False)
 
     @classmethod
-    def remove_xlsx(cls):
-        try:
-            os.remove("Relatório de PBI.xlsx")
-        except:
-            ...
+    def remove_xlsx(cls) -> None:
+        rel: str = "Relatório de PBI.xlsx"
+        if os.path.exists(rel):
+            try:
+                os.remove(rel)
+            except Exception as e:
+                print(f"An error ocurred: {str(e)}")
