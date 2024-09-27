@@ -1,5 +1,11 @@
-MAIL = 'X'
-PASS = 'X'
+from os import environ as env
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MAIL = env.get("MAIL")
+PASS = env.get("PASS")
 
 NEW_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][1]/div/div/span/a/span[2]"
 NEW_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][1]/div/div/span/a/span[3]"
