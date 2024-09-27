@@ -1,3 +1,5 @@
-selenium
-pandas
-openpyxl
+﻿openpyxl==3.1.5
+python-dotenv==1.0.1
+ruff==0.6.8
+selenium==4.25.0
+pandas==2.2.3

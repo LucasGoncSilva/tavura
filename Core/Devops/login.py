@@ -1,12 +1,14 @@
+from time import sleep
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
-from Core.Devops import constants
-from time import sleep
 
-class Login():
-    
+from Core.Devops import constants
+
+
+class Login:
     @classmethod
     def authenticate(cls):
         cls.options = webdriver.ChromeOptions()
@@ -17,7 +19,9 @@ class Login():
 
         # Iniciando a sessão
         cls.driver.implicitly_wait(10)
-        cls.driver.get('https://dev.azure.com/ONR-SAEC/ONR.Sustentacao/_boards/board/t/ONR.Sustentacao%20Team/Backlog%20items?System.AreaPath=ONR.Sustentacao')
+        cls.driver.get(
+            "https://dev.azure.com/ONR-SAEC/ONR.Sustentacao/_boards/board/t/ONR.Sustentacao%20Team/Backlog%20items?System.AreaPath=ONR.Sustentacao"
+        )
         cls.driver.maximize_window()
 
         mail_field: WebDriver = cls.driver.find_element(
@@ -42,7 +46,7 @@ class Login():
         stay_connected.click()
 
         sleep(5)
-    
+
     @classmethod
     def shut_down(cls, driver):
         driver.quit()
