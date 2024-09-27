@@ -1,5 +1,6 @@
 import re
 import time
+import os
 from os import environ as env
 
 import pandas as pd
@@ -18,6 +19,7 @@ class Main(Login):
     @classmethod
     def main(cls):
         start: float = time.time()
+        cls.remove_xlsx()
         cls.authenticate()
         cls.get_backlogs()
         cls.check_backlogs()
@@ -164,3 +166,10 @@ class Main(Login):
     def get_relatorio(cls):
         planilha = pd.DataFrame(data=cls.backlogs)
         planilha.to_excel("Relatório de PBI.xlsx", index=False)
+
+    @classmethod
+    def remove_xlsx(cls):
+        try:
+            os.remove("Relatório de PBI.xlsx")
+        except:
+            ...
