@@ -133,7 +133,7 @@ class Main(Login):
         approved_comments: list[str] = str(env.get("approveds_comments")).split()
 
         for backlog in cls.backlogs_element:
-            cls.driver.implicitly_wait(1)
+            cls.driver.implicitly_wait(0.3)
             action = ActionChains(cls.driver)
             action.move_to_element(backlog).click().perform()
             # New future implementation
