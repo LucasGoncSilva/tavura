@@ -83,7 +83,7 @@ class Main(Login):
         for state in backlogs_states:
             if state in states and state in states_mapings.keys():
                 try:
-                    cls.driver.implicitly_wait(1)
+                    cls.driver.implicitly_wait(2)
                     numbers: list[WebElement] = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][0]
                     )
@@ -93,9 +93,8 @@ class Main(Login):
                     efforts: list[WebElement] = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][2]
                     )
-                    cls.driver.implicitly_wait(10)
                 except:
-                    print(f"PBI's state: {state} null")
+                    print(f"PBIs of the state: {state} it's null")
 
                 cls.backlogs_element.extend(numbers)
 
@@ -134,6 +133,7 @@ class Main(Login):
         approved_comments: list[str] = str(env.get("approveds_comments")).split()
 
         for backlog in cls.backlogs_element:
+            cls.driver.implicitly_wait(1)
             action = ActionChains(cls.driver)
             action.move_to_element(backlog).click().perform()
             # New future implementation
@@ -173,7 +173,6 @@ class Main(Login):
                             pbi.update({"STATUS": "PRE: OK"})
                         elif "prod" in approved:
                             pbi.update({"STATUS": "PROD: OK"})
-
             cls.driver.back()
 
     @classmethod
