@@ -82,28 +82,45 @@ class Main(Login):
 
         for state in backlogs_states:
             if state in states and state in states_mapings.keys():
-                numbers: list[WebElement] = cls.driver.find_elements(
-                    By.XPATH, states_mapings[state][0]
-                )
-                titles: list[WebElement] = cls.driver.find_elements(
-                    By.XPATH, states_mapings[state][1]
-                )
-                efforts: list[WebElement] = cls.driver.find_elements(
-                    By.XPATH, states_mapings[state][2]
-                )
+                try:
+                    cls.driver.implicitly_wait(1)
+                    numbers: list[WebElement] = cls.driver.find_elements(
+                        By.XPATH, states_mapings[state][0]
+                    )
+                    titles: list[WebElement] = cls.driver.find_elements(
+                        By.XPATH, states_mapings[state][1]
+                    )
+                    efforts: list[WebElement] = cls.driver.find_elements(
+                        By.XPATH, states_mapings[state][2]
+                    )
+                    cls.driver.implicitly_wait(10)
+                except:
+                    print(f"PBI's state: {state} null")
 
                 cls.backlogs_element.extend(numbers)
 
                 for number, title, effort in zip(numbers, titles, efforts):
-                    cls.backlogs.append(
-                        {
-                            "PBI": number.text,
-                            "DESCRIÇÃO": title.text,
-                            "STATUS": " ",
-                            "EFFORT": effort.text.replace("Effort\n", ""),
-                            "FEATURE": "NÃO",
-                        }
-                    )
+                    _effort = effort.text.replace("Effort\n", "")
+                    if _effort.isnumeric():
+                        cls.backlogs.append(
+                            {
+                                "PBI": number.text,
+                                "DESCRIÇÃO": title.text,
+                                "STATUS": " ",
+                                "EFFORT": _effort,
+                                "FEATURE": "NÃO",
+                            }
+                        )
+                    else:
+                        cls.backlogs.append(
+                            {
+                                "PBI": number.text,
+                                "DESCRIÇÃO": title.text,
+                                "STATUS": " ",
+                                "EFFORT": "N/A",
+                                "FEATURE": "NÃO",
+                            }
+                        )
 
     @classmethod
     def remove_garbage(cls) -> None:
@@ -119,6 +136,9 @@ class Main(Login):
         for backlog in cls.backlogs_element:
             action = ActionChains(cls.driver)
             action.move_to_element(backlog).click().perform()
+            # New future implementation
+            # url = constants.URL + backlog.text
+            # cls.driver.get(url)
 
             try:
                 comments: list[WebElement] = cls.driver.find_elements(
@@ -135,7 +155,6 @@ class Main(Login):
                 print(f"An error ocurred: {str(e)}")
                 feature: WebElement | str = ""
 
-            # if isinstance(feature, WebElement):
             if feature != "":
                 if "11119" in feature.text:
                     pbi = cls.find_pbi(backlog.text)
