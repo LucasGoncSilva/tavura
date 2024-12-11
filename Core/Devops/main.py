@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from Core.Devops import constants
+from Core.Devops.constants import Constants
 from Core.Devops.login import Login
 
 
@@ -56,42 +57,14 @@ class Main(Login):
             print(f'Not expect: "{state}"')
 
         states_mapings: dict = {
-            "New": (constants.NEW_NUMBERS, constants.NEW_TITLES, constants.NEW_EFFORT),
-            "Approved": (
-                constants.APPROVED_NUMBERS,
-                constants.NEW_TITLES,
-                constants.APPROVED_EFFORT,
-            ),
-            "Committed": (
-                constants.COMMITTED_NUMBERS,
-                constants.COMMITTED_TITLES,
-                constants.COMMITTED_EFFORT,
-            ),
-            "External": (
-                constants.EXTERNAL_NUMBERS,
-                constants.EXTERNAL_TITLES,
-                constants.EXTERNAL_EFFORT,
-            ),
-            "Test": (
-                constants.TEST_NUMBERS,
-                constants.TEST_TITLES,
-                constants.TEST_EFFORT,
-            ),
-            "Accepted": (
-                constants.ACCEPTED_NUMBERS,
-                constants.ACCEPTED_TITLES,
-                constants.ACCEPTED_EFFORT,
-            ),
-            "Review": (
-                constants.REVIEW_NUMBERS,
-                constants.REVIEW_TITLES,
-                constants.REVIEW_EFFORT,
-            ),
-            "Done": (
-                constants.DONE_NUMBERS,
-                constants.DONE_TITLES,
-                constants.DONE_EFFORT,
-            ),
+            "New": (Constants.get_fields(1)),
+            "Approved": (Constants.get_fields(2)),
+            "Committed": (Constants.get_fields(3)),
+            "External": (Constants.get_fields(4),),
+            "Test": (Constants.get_fields(5)),
+            "Accepted": (Constants.get_fields(6)),
+            "Review": (Constants.get_fields(7)),
+            "Done": (Constants.get_fields(8)),
         }
 
         time.sleep(3)

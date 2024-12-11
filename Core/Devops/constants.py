@@ -7,9 +7,14 @@ load_dotenv()
 MAIL = env.get("MAIL")
 PASS = env.get("PASS")
 
-NEW_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][1]/div/div/span/a/span[2]"
-NEW_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][1]/div/div/span/a/span[3]"
-NEW_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][1]/div/div/div/div[2]"
+class Constants():
+    @classmethod
+    def get_fields(cls, number):
+        FIELD_NUMBERS: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/span/a/span[2]'
+        FIELD_TITLES: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/span/a/span[3]'
+        FIELD_EFFORT: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/div/div[2]'
+        return (FIELD_NUMBERS, FIELD_TITLES, FIELD_EFFORT)
+    
 
 APPROVED_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][2]/div/div/span/a/span[2]"
 APPROVED_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][2]/div/div/span/a/span[3]"
