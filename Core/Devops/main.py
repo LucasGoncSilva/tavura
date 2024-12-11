@@ -15,6 +15,10 @@ from Core.Devops.login import Login
 class Main(Login):
     backlogs: list = []
     backlogs_element: list = []
+    numbers: list[str] = []
+    title: list[str] = []
+    effort: list[str] = []
+
 
     @classmethod
     def main(cls):
@@ -35,16 +39,21 @@ class Main(Login):
         if _states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
 
-        states: list[str] = _states.split(" ")
-        backlogs_states: list = [
-            "New",
-            "Approved",
-            "Committed",
-            "Test",
-            "Accepted",
-            "Review",
-            "Done",
-        ]
+        if _states != None:
+            states: list[str] = _states.split(" ")
+            print(states)
+            backlogs_states: list = [
+                "New",
+                "Approved",
+                "Committed",
+                "External",
+                "Test",
+                "Accepted",
+                "Review",
+                "Done",
+            ]
+        else:
+            print(f'Not expect: "{state}"')
 
         states_mapings: dict = {
             "New": (constants.NEW_NUMBERS, constants.NEW_TITLES, constants.NEW_EFFORT),
@@ -85,25 +94,27 @@ class Main(Login):
             ),
         }
 
+        time.sleep(3)
         for state in backlogs_states:
             if state in states and state in states_mapings.keys():
                 try:
                     cls.driver.implicitly_wait(2)
-                    numbers: list[WebElement] = cls.driver.find_elements(
+                    cls.numbers = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][0]
                     )
-                    titles: list[WebElement] = cls.driver.find_elements(
+                    cls.titles = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][1]
                     )
-                    efforts: list[WebElement] = cls.driver.find_elements(
+                    cls.efforts = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][2]
                     )
+                    # print(cls.numbers.text)
+                    cls.backlogs_element.extend(cls.numbers)
                 except:
+                    cls.backlogs_element.extend("")
                     print(f"PBIs of the state: {state} it's null")
 
-                cls.backlogs_element.extend(numbers)
-
-                for number, title, effort in zip(numbers, titles, efforts):
+                for number, title, effort in zip(cls.numbers, cls.titles, cls.efforts):
                     _effort = effort.text.replace("Effort\n", "")
                     if _effort.isnumeric():
                         cls.backlogs.append(
@@ -138,7 +149,7 @@ class Main(Login):
         approved_comments: list[str] = str(env.get("approveds_comments")).split()
 
         for backlog in cls.backlogs_element:
-            cls.driver.implicitly_wait(0.3)
+            cls.driver.implicitly_wait(.3)
             action = ActionChains(cls.driver)
             action.move_to_element(backlog).click().perform()
             # New future implementation
@@ -156,11 +167,10 @@ class Main(Login):
                 feature: WebElement | str = cls.driver.find_element(
                     By.XPATH, constants.FEATURES
                 )
-            except Exception as e:
-                print(f"An error ocurred: {str(e)}")
-                feature: WebElement | str = ""
+            except:
+                feature: WebElement | str = " "
 
-            if feature != "":
+            if feature != " ":
                 if "11119" in feature.text:
                     pbi = cls.find_pbi(backlog.text)
                     if pbi:
