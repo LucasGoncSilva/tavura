@@ -16,10 +16,11 @@ from Core.Devops.login import Login
 class Main(Login):
     backlogs: list = []
     backlogs_element: list = []
-    numbers: list[str] = []
-    title: list[str] = []
-    effort: list[str] = []
-
+    numbers: list = []
+    numbers_ordened: list = []
+    title: list = []
+    effort: list = []
+    comments: list[WebElement] = [] 
 
     @classmethod
     def main(cls):
@@ -40,21 +41,19 @@ class Main(Login):
         if _states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
 
-        if _states != None:
-            states: list[str] = _states.split(" ")
-            print(states)
-            backlogs_states: list = [
-                "New",
-                "Approved",
-                "Committed",
-                "External",
-                "Test",
-                "Accepted",
-                "Review",
-                "Done",
-            ]
-        else:
-            print(f'Not expect: "{state}"')
+
+        states: list[str] = _states.split(" ")
+        print(states)
+        backlogs_states: list = [
+            "New",
+            "Approved",
+            "Committed",
+            "External",
+            "Test",
+            "Accepted",
+            "Review",
+            "Done",
+        ]
 
         states_mapings: dict = {
             "New": (Constants.get_fields(1)),
@@ -87,12 +86,12 @@ class Main(Login):
                     cls.backlogs_element.extend("")
                     print(f"PBIs of the state: {state} it's null")
 
-                for number, title, effort in zip(cls.numbers, cls.titles, cls.efforts):
+                for number, title, effort in zip(cls.numbers_ordened, cls.titles, cls.efforts):
                     _effort = effort.text.replace("Effort\n", "")
                     if _effort.isnumeric():
                         cls.backlogs.append(
                             {
-                                "PBI": number.text,
+                                "PBI": number,
                                 "DESCRIÇÃO": title.text,
                                 "STATUS": " ",
                                 "EFFORT": _effort,
@@ -102,7 +101,7 @@ class Main(Login):
                     else:
                         cls.backlogs.append(
                             {
-                                "PBI": number.text,
+                                "PBI": number,
                                 "DESCRIÇÃO": title.text,
                                 "STATUS": " ",
                                 "EFFORT": "N/A",
@@ -130,7 +129,7 @@ class Main(Login):
             # cls.driver.get(url)
 
             try:
-                comments: list[WebElement] = cls.driver.find_elements(
+                cls.comments: list[WebElement] = cls.driver.find_elements(
                     By.XPATH, constants.COMMENTS
                 )
             except Exception as e:
@@ -153,7 +152,7 @@ class Main(Login):
                 """Obtenção da PBI e adiciona OK em status"""
                 if any(
                     approved in comment.text.lower().replace(" ", "")
-                    for comment in comments
+                    for comment in cls.comments
                 ):
                     pbi = cls.find_pbi(backlog.text)
                     if pbi:
@@ -170,7 +169,7 @@ class Main(Login):
 
     @classmethod
     def get_relatorio(cls) -> None:
-        planilha = pd.DataFrame(data=cls.backlogs)
+        planilha = pd.DataFrame(data=sorted(cls.backlogs))
         planilha.to_excel("Relatório de PBI.xlsx", index=False)
 
     @classmethod

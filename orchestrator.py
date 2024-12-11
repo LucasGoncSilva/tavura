@@ -5,7 +5,7 @@ from Core.Devops.main import Main
 """
 New | Approved | Committed | External | Test | Accepted | Review | Done
 """
-PBI_STATES: str = "Approved"
+PBI_STATES: str = "Committed Test Accepted Review"
 APPROVEDS_COMMENTS: str = (
     "pre:aprovada pre:aprovado pré:aprovado pré:aprovada prod:aprovado prod:aprovada"
 )

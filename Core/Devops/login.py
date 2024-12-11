@@ -13,8 +13,8 @@ class Login:
         cls.options = webdriver.ChromeOptions()
         # cls.options.add_argument("-headless")
         cls.driver: WebDriver = webdriver.Chrome(options=cls.options)
-        cls.mail: str = constants.MAIL
-        cls.password: str = constants.PASS
+        cls.mail: str = constants.MAIL # type: ignore
+        cls.password: str = constants.PASS # type: ignore
 
         # Iniciando a sessão
         cls.driver.implicitly_wait(10)
