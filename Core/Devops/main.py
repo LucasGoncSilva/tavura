@@ -58,6 +58,11 @@ class Main(Login):
                 constants.COMMITTED_TITLES,
                 constants.COMMITTED_EFFORT,
             ),
+            "External": (
+                constants.EXTERNAL_NUMBERS,
+                constants.EXTERNAL_TITLES,
+                constants.EXTERNAL_EFFORT,
+            ),
             "Test": (
                 constants.TEST_NUMBERS,
                 constants.TEST_TITLES,

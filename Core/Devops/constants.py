@@ -19,21 +19,25 @@ COMMITTED_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-colum
 COMMITTED_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][3]/div/div/span/a/span[3]"
 COMMITTED_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][3]/div/div/div/div[2]"
 
-TEST_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][4]/div/div/span/a/span[2]"
-TEST_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][4]/div/div/span/a/span[3]"
-TEST_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][4]/div/div/div/div[2]"
+EXTERNAL_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][4]/div/div/span/a/span[2]"
+EXTERNAL_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][4]/div/div/span/a/span[3]"
+EXTERNAL_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][4]/div/div/div/div[2]"
 
-ACCEPTED_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][5]/div/div/span/a/span[2]"
-ACCEPTED_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][5]/div/div/span/a/span[3]"
-ACCEPTED_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][5]/div/div/div/div[2]"
+TEST_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][5]/div/div/span/a/span[2]"
+TEST_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][5]/div/div/span/a/span[3]"
+TEST_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][5]/div/div/div/div[2]"
 
-REVIEW_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][6]/div/div/span/a/span[2]"
-REVIEW_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][6]/div/div/span/a/span[3]"
-REVIEW_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][6]/div/div/div/div[2]"
+ACCEPTED_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][6]/div/div/span/a/span[2]"
+ACCEPTED_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][6]/div/div/span/a/span[3]"
+ACCEPTED_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][6]/div/div/div/div[2]"
 
-DONE_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][7]/div/div/span/a/span[2]"
-DONE_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][7]/div/div/span/a/span[3]"
-DONE_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][7]/div/div/div/div[2]"
+REVIEW_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][7]/div/div/span/a/span[2]"
+REVIEW_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][7]/div/div/span/a/span[3]"
+REVIEW_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][7]/div/div/div/div[2]"
+
+DONE_NUMBERS: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][8]/div/div/span/a/span[2]"
+DONE_TITLES: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][8]/div/div/span/a/span[3]"
+DONE_EFFORT: str = "//div[@class='flex-column flex-grow kanban-board-column padding-bottom-8'][8]/div/div/div/div[2]"
 
 COMMENTS: str = "//div[@class='comment-item flex-row displayed-comment depth-8 markdown-discussion-comment']/div[2]/div/div[2]"
 FEATURES: str = "//div[@class='artifact-link-id secondary-text margin-right-4']"
