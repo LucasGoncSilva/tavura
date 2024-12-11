@@ -3,25 +3,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-
+from Core.Devops.browser import Browser
 from Core.Devops import constants
 
 
-class Login:
+class Login(Browser):
     @classmethod
     def authenticate(cls):
-        cls.options = webdriver.ChromeOptions()
-        # cls.options.add_argument("-headless")
-        cls.driver: WebDriver = webdriver.Chrome(options=cls.options)
         cls.mail: str = constants.MAIL # type: ignore
         cls.password: str = constants.PASS # type: ignore
 
-        # Iniciando a sessão
-        cls.driver.implicitly_wait(10)
-        cls.driver.get(
-            "https://dev.azure.com/ONR-SAEC/ONR.Sustentacao/_boards/board/t/ONR.Sustentacao%20Team/Backlog%20items?System.AreaPath=ONR.Sustentacao"
-        )
-        cls.driver.maximize_window()
+        cls.link_browser('Chrome')
 
         mail_field: WebElement = cls.driver.find_element(
             By.XPATH, "//input[@type='email']"
@@ -43,7 +35,3 @@ class Login:
             By.XPATH, "//input[@type='submit']"
         )
         stay_connected.click()
-
-    @classmethod
-    def shut_down(cls, driver):
-        driver.quit()

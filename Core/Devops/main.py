@@ -17,23 +17,34 @@ class Main(Login):
     backlogs: list = []
     backlogs_element: list = []
     numbers: list = []
-    numbers_ordened: list = []
     title: list = []
     effort: list = []
     comments: list[WebElement] = [] 
 
     @classmethod
     def main(cls):
-        start: float = time.time()
-        cls.remove_xlsx()
+        start_time = time.time()
+
+        try:
+            cls.run_pipeline()
+        finally:
+            cls.report_duration(start_time)
+
+    @classmethod
+    def run_pipeline(cls):
+        cls.remove_xls()
         cls.authenticate()
         cls.get_backlogs()
-        cls.check_backlogs()
+        cls.validate_backlogs()
         cls.remove_garbage()
         cls.shut_down(cls.driver)
         cls.get_relatorio()
-        end: float = time.time()
-        print(f"Duration of the program: '{end - start:.2f}s'")
+
+    @classmethod
+    def report_duration(cls, start_time: float):
+        end_time = time.time()
+        duration = end_time - start_time
+        print(f"Duration of the program: {duration:.2f}s")
 
     @classmethod
     def get_backlogs(cls) -> None:
@@ -41,19 +52,7 @@ class Main(Login):
         if _states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
 
-
         states: list[str] = _states.split(" ")
-        print(states)
-        backlogs_states: list = [
-            "New",
-            "Approved",
-            "Committed",
-            "External",
-            "Test",
-            "Accepted",
-            "Review",
-            "Done",
-        ]
 
         states_mapings: dict = {
             "New": (Constants.get_fields(1)),
@@ -66,8 +65,9 @@ class Main(Login):
             "Done": (Constants.get_fields(8)),
         }
 
+        """Necessary sleep to work"""
         time.sleep(3)
-        for state in backlogs_states:
+        for state in constants.backlogs_states:
             if state in states and state in states_mapings.keys():
                 try:
                     cls.driver.implicitly_wait(2)
@@ -80,18 +80,17 @@ class Main(Login):
                     cls.efforts = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][2]
                     )
-                    # print(cls.numbers.text)
                     cls.backlogs_element.extend(cls.numbers)
                 except:
                     cls.backlogs_element.extend("")
                     print(f"PBIs of the state: {state} it's null")
 
-                for number, title, effort in zip(cls.numbers_ordened, cls.titles, cls.efforts):
+                for number, title, effort in zip(cls.numbers, cls.titles, cls.efforts):
                     _effort = effort.text.replace("Effort\n", "")
                     if _effort.isnumeric():
                         cls.backlogs.append(
                             {
-                                "PBI": number,
+                                "PBI": number.text,
                                 "DESCRIÇÃO": title.text,
                                 "STATUS": " ",
                                 "EFFORT": _effort,
@@ -101,7 +100,7 @@ class Main(Login):
                     else:
                         cls.backlogs.append(
                             {
-                                "PBI": number,
+                                "PBI": number.text,
                                 "DESCRIÇÃO": title.text,
                                 "STATUS": " ",
                                 "EFFORT": "N/A",
@@ -117,16 +116,13 @@ class Main(Login):
             backlog.update({"DESCRIÇÃO": description})
 
     @classmethod
-    def check_backlogs(cls) -> None:
+    def validate_backlogs(cls) -> None:
         approved_comments: list[str] = str(env.get("approveds_comments")).split()
 
         for backlog in cls.backlogs_element:
             cls.driver.implicitly_wait(.3)
             action = ActionChains(cls.driver)
             action.move_to_element(backlog).click().perform()
-            # New future implementation
-            # url = constants.URL + backlog.text
-            # cls.driver.get(url)
 
             try:
                 cls.comments: list[WebElement] = cls.driver.find_elements(
@@ -144,7 +140,7 @@ class Main(Login):
 
             if feature != " ":
                 if "11119" in feature.text:
-                    pbi = cls.find_pbi(backlog.text)
+                    pbi = cls.get_pbi(backlog.text)
                     if pbi:
                         pbi.update({"FEATURE": "SIM"})
 
@@ -154,7 +150,7 @@ class Main(Login):
                     approved in comment.text.lower().replace(" ", "")
                     for comment in cls.comments
                 ):
-                    pbi = cls.find_pbi(backlog.text)
+                    pbi = cls.get_pbi(backlog.text)
                     if pbi:
                         if "pre" in approved:
                             pbi.update({"STATUS": "PRE: OK"})
@@ -163,20 +159,21 @@ class Main(Login):
             cls.driver.back()
 
     @classmethod
-    def find_pbi(cls, number) -> dict | None:
+    def get_pbi(cls, number) -> dict | None:
         pbi = next((pbi for pbi in cls.backlogs if pbi["PBI"] == number), None)
         return pbi
 
     @classmethod
     def get_relatorio(cls) -> None:
-        planilha = pd.DataFrame(data=sorted(cls.backlogs))
+        planilha = pd.DataFrame(data=cls.backlogs)
         planilha.to_excel("Relatório de PBI.xlsx", index=False)
 
     @classmethod
-    def remove_xlsx(cls) -> None:
+    def remove_xls(cls) -> None:
         rel: str = "Relatório de PBI.xlsx"
         if os.path.exists(rel):
             try:
                 os.remove(rel)
             except Exception as e:
                 print(f"An error ocurred: {str(e)}")
+

@@ -15,6 +15,17 @@ class Constants():
         FIELD_EFFORT: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/div/div[2]'
         return (FIELD_NUMBERS, FIELD_TITLES, FIELD_EFFORT)
     
+backlogs_states: list = [
+    "New",
+    "Approved",
+    "Committed",
+    "External",
+    "Test",
+    "Accepted",
+    "Review",
+    "Done",
+]
+    
 COMMENTS: str = "//div[@class='comment-item flex-row displayed-comment depth-8 markdown-discussion-comment']/div[2]/div/div[2]"
 FEATURES: str = "//div[@class='artifact-link-id secondary-text margin-right-4']"
 
