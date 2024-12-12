@@ -1,16 +1,15 @@
 import re
 import time
 import os
-from os import environ as env
-
 import pandas as pd
+from os import environ as env
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-
 from Core import constants
 from Core.constants import Constants
 from Core.login import Login
+
 
 
 class Main(Login):
