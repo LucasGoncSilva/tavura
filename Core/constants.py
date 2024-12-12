@@ -25,6 +25,10 @@ backlogs_states: list = [
     "Review",
     "Done",
 ]
+
+APPROVEDS_COMMENTS: str = (
+    "pre:aprovada pre:aprovado pré:aprovado pré:aprovada prod:aprovado prod:aprovada"
+)
     
 COMMENTS: str = "//div[@class='comment-item flex-row displayed-comment depth-8 markdown-discussion-comment']/div[2]/div/div[2]"
 FEATURES: str = "//div[@class='artifact-link-id secondary-text margin-right-4']"

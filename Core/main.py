@@ -8,17 +8,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from Core.Devops import constants
-from Core.Devops.constants import Constants
-from Core.Devops.login import Login
+from Core import constants
+from Core.constants import Constants
+from Core.login import Login
 
 
 class Main(Login):
     backlogs: list = []
     backlogs_element: list = []
-    numbers: list = []
-    title: list = []
-    effort: list = []
     comments: list[WebElement] = [] 
 
     @classmethod
@@ -65,27 +62,32 @@ class Main(Login):
             "Done": (Constants.get_fields(8)),
         }
 
+
+        numbers: list[WebElement] = []
+        titles: list[WebElement] = []
+        efforts: list[WebElement] = []
+        
         """Necessary sleep to work"""
         time.sleep(3)
         for state in constants.backlogs_states:
             if state in states and state in states_mapings.keys():
                 try:
                     cls.driver.implicitly_wait(2)
-                    cls.numbers = cls.driver.find_elements(
+                    numbers = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][0]
                     )
-                    cls.titles = cls.driver.find_elements(
+                    titles = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][1]
                     )
-                    cls.efforts = cls.driver.find_elements(
+                    efforts = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][2]
                     )
-                    cls.backlogs_element.extend(cls.numbers)
+                    cls.backlogs_element.extend(numbers)
                 except:
                     cls.backlogs_element.extend("")
                     print(f"PBIs of the state: {state} it's null")
 
-                for number, title, effort in zip(cls.numbers, cls.titles, cls.efforts):
+                for number, title, effort in zip(numbers, titles, efforts):
                     _effort = effort.text.replace("Effort\n", "")
                     if _effort.isnumeric():
                         cls.backlogs.append(
@@ -117,7 +119,7 @@ class Main(Login):
 
     @classmethod
     def validate_backlogs(cls) -> None:
-        approved_comments: list[str] = str(env.get("approveds_comments")).split()
+        approved_comments: list[str] = str(constants.APPROVEDS_COMMENTS).split()
 
         for backlog in cls.backlogs_element:
             cls.driver.implicitly_wait(.3)
@@ -132,14 +134,14 @@ class Main(Login):
                 print(f"An error ocurred: {str(e)}")
 
             try:
-                feature: WebElement | str = cls.driver.find_element(
+                feature = cls.driver.find_element(
                     By.XPATH, constants.FEATURES
                 )
             except:
-                feature: WebElement | str = " "
+                feature = " "
 
             if feature != " ":
-                if "11119" in feature.text:
+                if "11119" in feature.text: # type: ignore
                     pbi = cls.get_pbi(backlog.text)
                     if pbi:
                         pbi.update({"FEATURE": "SIM"})

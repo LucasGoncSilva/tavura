@@ -3,8 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from Core.Devops.browser import Browser
-from Core.Devops import constants
+from Core.browser import Browser
+from Core import constants
 
 
 class Login(Browser):

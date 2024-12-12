@@ -1,6 +1,4 @@
-from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver import Chrome, ChromeOptions, Edge, EdgeOptions, Firefox, FirefoxOptions
  
 
@@ -14,7 +12,7 @@ class Browser():
         }
 
         options = browsers[browser][1]()
-        options.add_argument("-headless")
+        # options.add_argument("-headless")
  
         cls.driver: WebDriver = browsers[browser][0](options)
         cls.driver.get('https://dev.azure.com/ONR-SAEC/ONR.Sustentacao/_boards/board/t/ONR.Sustentacao%20Team/Backlog%20items?System.AreaPath=ONR.Sustentacao')
