@@ -2,6 +2,7 @@ import re
 import time
 import os
 import pandas as pd
+
 from os import environ as env
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -18,8 +19,16 @@ class Main(Login):
     comments: list[WebElement] = [] 
 
     @classmethod
-    def main(cls):
+    def main(cls, mail_, pass_, checks):
+        
         start_time = time.time()
+        cls.mail_ = mail_
+        cls.pass_ = pass_
+        cls.states = " "
+        
+        for chave, item in checks.items():
+            if item == True:
+                cls.states += chave + " "
 
         try:
             cls.run_pipeline()
@@ -29,11 +38,11 @@ class Main(Login):
     @classmethod
     def run_pipeline(cls):
         cls.remove_xls()
-        cls.authenticate()
-        cls.get_backlogs()
+        cls.authenticate(cls.mail_, cls.pass_)
+        cls.get_backlogs(cls.states)
         cls.validate_backlogs()
         cls.remove_garbage()
-        cls.shut_down(cls.driver)
+        cls.shut_down()
         cls.get_relatorio()
 
     @classmethod
@@ -43,8 +52,7 @@ class Main(Login):
         print(f"Duration of the program: {duration:.2f}s")
 
     @classmethod
-    def get_backlogs(cls) -> None:
-        _states: str = str(env.get("state"))
+    def get_backlogs(cls, _states) -> None:
         if _states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
 
@@ -178,3 +186,7 @@ class Main(Login):
             except Exception as e:
                 print(f"An error ocurred: {str(e)}")
 
+    
+    @classmethod
+    def shut_down(cls):
+        cls.driver.quit()

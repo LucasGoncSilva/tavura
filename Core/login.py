@@ -7,9 +7,9 @@ from Core import constants
 
 class Login(Browser):
     @classmethod
-    def authenticate(cls):
-        cls.mail: str = constants.MAIL # type: ignore
-        cls.password: str = constants.PASS # type: ignore
+    def authenticate(cls, mail_, pass_):
+        cls.mail: str = mail_ # type: ignore
+        cls.password: str = pass_ # type: ignore
 
         cls.link_browser('Chrome')
 
