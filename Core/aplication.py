@@ -9,6 +9,8 @@ from tkinter import ttk
 import threading
 import shutil
 from tkinter import filedialog
+from queue import Queue
+from tqdm import tqdm
 
 root = Tk()
 ck_new = BooleanVar()
@@ -24,6 +26,15 @@ ck_done = BooleanVar()
 class Funcs(Main):
     
     def run_program(self):
+        self.queue = Queue()
+
+        self.thread = threading.Thread(target=self.run_automation)
+        self.thread.start()
+
+        # Cria uma função para atualizar a interface com dados da fila
+        self.update_gui()
+
+    def run_automation(self):
         mail_ = self.mail_entry.get() # type: ignore
         pass_ = self.pass_entry.get() # type: ignore
         checks = {
@@ -37,8 +48,23 @@ class Funcs(Main):
             "Done": ck_done.get()
         }
 
-        automation_thread = threading.Thread(target=self.main, args=(mail_, pass_,checks))
-        automation_thread.start()
+        backlogs = self.main(mail_, pass_, checks)
+        self.queue.put(backlogs)
+
+    def update_gui(self):
+        if not self.queue.empty():
+            backlogs = self.queue.get()
+
+            for backlog in tqdm(backlogs):
+                pbi = backlog.get('PBI')
+                descricao = backlog.get('DESCRIÇÃO')
+                status = backlog.get('STATUS')
+                effort = backlog.get('EFFORT')
+                feature = backlog.get('FEATURE')
+                self.listBacklogs.insert('', 'end', text=pbi, values=(descricao, status, effort, feature))
+        
+        self.root.after(300, self.update_gui)
+
     
     def stop_program(self):
         self.shut_down()
@@ -149,14 +175,14 @@ class Aplication(Funcs):
         self.listBacklogs.heading('#3', text='EFFORT')
         self.listBacklogs.heading('#4', text='FEATURE')
 
-        self.listBacklogs.column('#0', width=77)
+        self.listBacklogs.column('#0', width=81)
         self.listBacklogs.column('#1', width=300)
-        self.listBacklogs.column('#2', width=77)
-        self.listBacklogs.column('#3', width=77)
-        self.listBacklogs.column('#4', width=77)
+        self.listBacklogs.column('#2', width=81)
+        self.listBacklogs.column('#3', width=81)
+        self.listBacklogs.column('#4', width=81)
 
         self.listBacklogs.place(relx=0.005, rely=0.1, relwidth=0.95, relheight=0.85)
 
-        # self.scroolTable = Scrollbar(self.frame_2, orient='vertical')
-        # self.listBacklogs.configure(yscroll=self.scroolTable.set)
-        # self.scroolTable.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.05)
+        self.scroolTable = Scrollbar(self.frame_2, orient='vertical')
+        self.listBacklogs.configure(yscroll=self.scroolTable.set)
+        self.scroolTable.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)

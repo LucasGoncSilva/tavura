@@ -11,5 +11,5 @@ PBI_STATES: str = "Committed Test Accepted Review"
 
 env["state"] = PBI_STATES
 
-Main.main()
-# Aplication()
+# Main.main()
+Aplication()

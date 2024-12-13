@@ -2,8 +2,8 @@ import re
 import time
 import os
 import pandas as pd
-
-from os import environ as env
+from tkinter import *
+from tqdm import tqdm
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -20,12 +20,12 @@ class Main(Login):
 
     @classmethod
     def main(cls, mail_, pass_, checks):
-        
         start_time = time.time()
         cls.mail_ = mail_
         cls.pass_ = pass_
         cls.states = " "
         
+
         for chave, item in checks.items():
             if item == True:
                 cls.states += chave + " "
@@ -34,6 +34,8 @@ class Main(Login):
             cls.run_pipeline()
         finally:
             cls.report_duration(start_time)
+            return cls.backlogs
+        
 
     @classmethod
     def run_pipeline(cls):
@@ -128,7 +130,7 @@ class Main(Login):
     def validate_backlogs(cls) -> None:
         approved_comments: list[str] = str(constants.APPROVEDS_COMMENTS).split()
 
-        for backlog in cls.backlogs_element:
+        for backlog in tqdm(cls.backlogs_element):
             cls.driver.implicitly_wait(.3)
             action = ActionChains(cls.driver)
             action.move_to_element(backlog).click().perform()
