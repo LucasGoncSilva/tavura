@@ -5,6 +5,7 @@ import os
 # from tkinter.messagebox import showinfo
 import tkinter.messagebox 
 from tkinter.ttk import Button, Entry
+from tkinter import ttk
 import threading
 import shutil
 from tkinter import filedialog
@@ -68,6 +69,7 @@ class Aplication(Funcs):
         self.screen()
         self.frames_screen()
         self.buttons()
+        self.board()
         root.mainloop()
 
 
@@ -137,3 +139,24 @@ class Aplication(Funcs):
 
         self.c_done = Checkbutton(self.frame_1, text='Done', bg='#DFE9F5', variable=ck_done)
         self.c_done.place(relx=0.78, rely=0.75, relwidth=0.14, relheight=0.1)
+
+
+    def board(self):
+        self.listBacklogs = ttk.Treeview(self.frame_2, height=3, column=('col1', 'col2', 'col3', 'col4', 'col5')) # type: ignore
+        self.listBacklogs.heading('#0', text='PBI')
+        self.listBacklogs.heading('#1', text='DESCRIÇÃO')
+        self.listBacklogs.heading('#2', text='STATUS')
+        self.listBacklogs.heading('#3', text='EFFORT')
+        self.listBacklogs.heading('#4', text='FEATURE')
+
+        self.listBacklogs.column('#0', width=77)
+        self.listBacklogs.column('#1', width=300)
+        self.listBacklogs.column('#2', width=77)
+        self.listBacklogs.column('#3', width=77)
+        self.listBacklogs.column('#4', width=77)
+
+        self.listBacklogs.place(relx=0.005, rely=0.1, relwidth=0.95, relheight=0.85)
+
+        # self.scroolTable = Scrollbar(self.frame_2, orient='vertical')
+        # self.listBacklogs.configure(yscroll=self.scroolTable.set)
+        # self.scroolTable.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.05)
