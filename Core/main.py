@@ -2,12 +2,12 @@ import re
 import time
 import os
 import pandas as pd
+import constants
 from tkinter import *
 from tqdm import tqdm
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-import constants
 from constants import Constants
 from login import Login
 
@@ -17,6 +17,9 @@ class Main(Login):
     backlogs: list = []
     backlogs_element: list = []
     comments: list[WebElement] = [] 
+    numbers: list = []
+    titles: list = []
+    efforts: list = []
 
     @classmethod
     def main(cls, mail_, pass_, checks):
@@ -24,17 +27,26 @@ class Main(Login):
         cls.mail_ = mail_
         cls.pass_ = pass_
         cls.states = " "
+        cls.total = 0
+        cls.total_checked = 0
         
-
         for chave, item in checks.items():
             if item == True:
                 cls.states += chave + " "
 
         try:
+            if len(cls.backlogs) > 0:
+                cls.backlogs.clear()
+                cls.backlogs.clear()
+                cls.comments.clear()
+                cls.numbers.clear()
+                cls.titles.clear()
+                cls.efforts.clear()
             cls.run_pipeline()
         finally:
             cls.report_duration(start_time)
-            return cls.backlogs
+            object_ = [cls.backlogs, cls.total, cls.total_checked]
+            return object_
         
 
     @classmethod
@@ -58,6 +70,7 @@ class Main(Login):
         if _states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
 
+        states: list[str] = ""
         states: list[str] = _states.split(" ")
 
         states_mapings: dict = {
@@ -70,11 +83,6 @@ class Main(Login):
             "Review": (Constants.get_fields(7)),
             "Done": (Constants.get_fields(8)),
         }
-
-
-        numbers: list[WebElement] = []
-        titles: list[WebElement] = []
-        efforts: list[WebElement] = []
         
         """Necessary sleep to work"""
         time.sleep(3)
@@ -97,6 +105,8 @@ class Main(Login):
                     print(f"PBIs of the state: {state} it's null")
 
                 for number, title, effort in zip(numbers, titles, efforts):
+                    # print(number.text)
+                    cls.total += 1
                     _effort = effort.text.replace("Effort\n", "")
                     if _effort.isnumeric():
                         cls.backlogs.append(
@@ -131,10 +141,11 @@ class Main(Login):
         approved_comments: list[str] = str(constants.APPROVEDS_COMMENTS).split()
 
         for backlog in tqdm(cls.backlogs_element):
+            print('oi')
             cls.driver.implicitly_wait(.3)
             action = ActionChains(cls.driver)
             action.move_to_element(backlog).click().perform()
-
+            cls.total_checked += 1
             try:
                 cls.comments: list[WebElement] = cls.driver.find_elements(
                     By.XPATH, constants.COMMENTS

@@ -4,10 +4,7 @@ import threading
 from tkinter.ttk import Button, Entry
 from tkinter import ttk
 from tkinter import *
-
-import openpyxl
 from main import Main
-from tkinter import filedialog
 from queue import Queue
 from tqdm import tqdm
 
@@ -23,17 +20,20 @@ ck_review = BooleanVar()
 ck_done = BooleanVar()
 
 class Funcs(Main):
-    
+    executions_realized = 0
+    stop_flag = True
+
     def run_program(self):
         self.queue = Queue()
-
         self.thread = threading.Thread(target=self.run_automation)
         self.thread.start()
-
-        # Cria uma função para atualizar a interface com dados da fila
         self.update_gui()
 
+
     def run_automation(self):
+        if self.executions_realized > 0:
+            self.clean_fields()
+
         mail_ = self.mail_entry.get() # type: ignore
         pass_ = self.pass_entry.get() # type: ignore
         checks = {
@@ -54,7 +54,7 @@ class Funcs(Main):
         if not self.queue.empty():
             backlogs = self.queue.get()
 
-            for backlog in tqdm(backlogs):
+            for backlog in backlogs[0]:
                 pbi = backlog.get('PBI')
                 descricao = backlog.get('DESCRIÇÃO')
                 status = backlog.get('STATUS')
@@ -62,12 +62,23 @@ class Funcs(Main):
                 feature = backlog.get('FEATURE')
                 self.listBacklogs.insert('', 'end', text=pbi, values=(descricao, status, effort, feature))
 
-            tkinter.messagebox.showinfo('Sucesso.', 'Relatório gerado com sucesso!')
+            if not backlogs[0] == "":
+                if len(backlogs[0]) == backlogs[1] and len(backlogs[0]) == backlogs[2]:
+                    tkinter.messagebox.showinfo('Sucesso.', 'Relatório gerado com sucesso!')
+                    self.stop_flag = True
+                    self.executions_realized += 1
+                    if self.stop_flag:
+                        return
         
         self.root.after(300, self.update_gui)
 
+    def clean_fields(self):
+        self.listBacklogs.delete(*self.listBacklogs.get_children())
     
     def stop_program(self):
+        self.stop_flag = True  # Altera a flag para parar o processo
+        if self.thread.is_alive():
+            self.thread.join()
         self.shut_down()
 
     def open_xlsx(self):
@@ -81,7 +92,6 @@ class Funcs(Main):
                     else:
                         subprocess.run(['open' if os.name == 'posix' else 'xdg-open'], path)
                         tkinter.messagebox.showinfo("Sucesso", "Arquivo aberto com sucesso.")
-
                 except:
                     tkinter.messagebox.showinfo('Não encontrado.', 'Não foi possível abrir o arquivo.')
         else:
