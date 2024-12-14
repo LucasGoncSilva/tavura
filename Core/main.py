@@ -7,9 +7,9 @@ from tqdm import tqdm
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-from Core import constants
-from Core.constants import Constants
-from Core.login import Login
+import constants
+from constants import Constants
+from login import Login
 
 
 

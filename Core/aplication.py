@@ -1,8 +1,7 @@
 from tkinter import *
 from tkinter import IntVar
-from Core.main import Main
+from main import Main
 import os
-# from tkinter.messagebox import showinfo
 import tkinter.messagebox 
 from tkinter.ttk import Button, Entry
 from tkinter import ttk
@@ -186,3 +185,6 @@ class Aplication(Funcs):
         self.scroolTable = Scrollbar(self.frame_2, orient='vertical')
         self.listBacklogs.configure(yscroll=self.scroolTable.set)
         self.scroolTable.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
+
+
+Aplication()
