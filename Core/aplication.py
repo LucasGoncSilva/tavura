@@ -1,12 +1,12 @@
-from tkinter import *
-from tkinter import IntVar
-from main import Main
 import os
 import tkinter.messagebox 
+import threading
 from tkinter.ttk import Button, Entry
 from tkinter import ttk
-import threading
-import shutil
+from tkinter import *
+
+import openpyxl
+from main import Main
 from tkinter import filedialog
 from queue import Queue
 from tqdm import tqdm
@@ -61,6 +61,8 @@ class Funcs(Main):
                 effort = backlog.get('EFFORT')
                 feature = backlog.get('FEATURE')
                 self.listBacklogs.insert('', 'end', text=pbi, values=(descricao, status, effort, feature))
+
+            tkinter.messagebox.showinfo('Sucesso.', 'Relatório gerado com sucesso!')
         
         self.root.after(300, self.update_gui)
 
@@ -68,24 +70,22 @@ class Funcs(Main):
     def stop_program(self):
         self.shut_down()
 
-    def create_xlsx(self):
-        self.source_file = 'Relatório de PBI.xlsx'
+    def open_xlsx(self):
+        path = os.path.join(os.path.expanduser("~"), "Downloads", "Relatório de PBI.xlsx")
 
-        if os.path.exists(self.source_file):
-            file_path = filedialog.asksaveasfilename(
-                defaultextension='.xlsx',
-                filetypes=[('Excel Files', '*.xlsx'), ('All files', '*.*')],
-                title='Relatório de Backlogs'
-            )
-            if file_path:
+        if os.path.exists(path):
                 try:
-                    shutil.copy(self.source_file, file_path)
-                    tkinter.messagebox.showinfo('OK', 'Relatório salvo com sucesso!')
-                except Exception as e:
-                    tkinter.messagebox.showinfo("Erro.", "Não foi possível salvar o arquivo.")
-                    print(f"Erro ao baixar o arquivo:{e}")
+                    if os.name == 'nt':
+                        os.startfile(path)
+                        tkinter.messagebox.showinfo("Sucesso", "Arquivo aberto com sucesso.")
+                    else:
+                        subprocess.run(['open' if os.name == 'posix' else 'xdg-open'], path)
+                        tkinter.messagebox.showinfo("Sucesso", "Arquivo aberto com sucesso.")
+
+                except:
+                    tkinter.messagebox.showinfo('Não encontrado.', 'Não foi possível abrir o arquivo.')
         else:
-            tkinter.messagebox.showinfo("Não encontrado.", "Necessário executar a aplicação para a obtenção de dados.")
+            tkinter.messagebox.showinfo("Não encontrado.", "Necessário Gerar Excel para abrir.")
 
 
 class Aplication(Funcs):
@@ -112,13 +112,13 @@ class Aplication(Funcs):
         self.frame_2.place(relx=0.02, rely=0.5, relwidth=0.96, relheight=0.46)
 
     def buttons(self):
-        self.btn_run = Button(self.frame_1, text='RUN', command=self.run_program)
+        self.btn_run = Button(self.frame_1, text='GERAR EXCEL', command=self.run_program)
         self.btn_run.place(relx=0.05, rely=0.1, relwidth=0.3, relheight=0.2)
 
-        self.btn_stop = Button(self.frame_1, text='STOP', command=self.stop_program)
+        self.btn_stop = Button(self.frame_1, text='PARAR', command=self.stop_program)
         self.btn_stop.place(relx=0.35, rely=0.1, relwidth=0.3, relheight=0.2)
 
-        self.btn_restart = Button(self.frame_1, text='GERAR EXCEL', command=self.create_xlsx)
+        self.btn_restart = Button(self.frame_1, text='ABRIR EXCEL', command=self.open_xlsx)
         self.btn_restart.place(relx=0.65, rely=0.1, relwidth=0.3, relheight=0.2)
 
         ## Labels e Input
