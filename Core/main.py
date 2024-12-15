@@ -4,12 +4,13 @@ import os
 import pandas as pd
 import constants
 from tkinter import *
-from tqdm import tqdm
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from constants import Constants
 from login import Login
+from selenium.webdriver.support.expected_conditions import element_to_be_clickable
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 
@@ -139,19 +140,21 @@ class Main(Login):
     @classmethod
     def validate_backlogs(cls) -> None:
         approved_comments: list[str] = str(constants.APPROVEDS_COMMENTS).split()
+        action = ActionChains(cls.driver)
+        wait = WebDriverWait(cls.driver, 10)
 
-        for backlog in tqdm(cls.backlogs_element):
-            print('oi')
+        for backlog in cls.backlogs_element:
             cls.driver.implicitly_wait(.3)
-            action = ActionChains(cls.driver)
-            action.move_to_element(backlog).click().perform()
-            cls.total_checked += 1
             try:
+                wait.until(element_to_be_clickable(backlog))
+                action.move_to_element(backlog).click().perform()
                 cls.comments: list[WebElement] = cls.driver.find_elements(
                     By.XPATH, constants.COMMENTS
                 )
+                cls.total_checked += 1
             except Exception as e:
                 print(f"An error ocurred: {str(e)}")
+                cls.total_checked += 1
 
             try:
                 feature = cls.driver.find_element(

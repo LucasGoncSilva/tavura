@@ -5,12 +5,14 @@ from browser import Browser
 
 
 class Login(Browser):
+    counter = 0
     @classmethod
     def authenticate(cls, mail_, pass_):
+        cls.counter+=1
         cls.mail: str = mail_ # type: ignore
         cls.password: str = pass_ # type: ignore
 
-        cls.link_browser('Chrome')
+        cls.link_browser('Chrome', cls.counter)
 
         mail_field: WebElement = cls.driver.find_element(
             By.XPATH, "//input[@type='email']"

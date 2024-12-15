@@ -6,7 +6,7 @@ from tkinter import ttk
 from tkinter import *
 from main import Main
 from queue import Queue
-from tqdm import tqdm
+# from tqdm import tqdm
 
 root = Tk()
 ck_new = BooleanVar()
@@ -21,7 +21,6 @@ ck_done = BooleanVar()
 
 class Funcs(Main):
     executions_realized = 0
-    stop_flag = True
 
     def run_program(self):
         self.queue = Queue()
@@ -65,20 +64,14 @@ class Funcs(Main):
             if not backlogs[0] == "":
                 if len(backlogs[0]) == backlogs[1] and len(backlogs[0]) == backlogs[2]:
                     tkinter.messagebox.showinfo('Sucesso.', 'Relatório gerado com sucesso!')
-                    self.stop_flag = True
                     self.executions_realized += 1
-                    if self.stop_flag:
-                        return
         
-        self.root.after(300, self.update_gui)
+        self.root.after(1000, self.update_gui)
 
     def clean_fields(self):
         self.listBacklogs.delete(*self.listBacklogs.get_children())
     
     def stop_program(self):
-        self.stop_flag = True  # Altera a flag para parar o processo
-        if self.thread.is_alive():
-            self.thread.join()
         self.shut_down()
 
     def open_xlsx(self):
