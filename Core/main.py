@@ -2,16 +2,15 @@ import re
 import time
 import os
 import pandas as pd
-import constants
-from tkinter import *
+from core import constants
+from tkinter import * # type: ignore
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-from constants import Constants
-from login import Login
+from core.constants import Constants
+from core.login import Login
 from selenium.webdriver.support.expected_conditions import element_to_be_clickable
-from selenium.webdriver.support.ui import WebDriverWait
-
+from selenium.webdriver.support.ui import WebDriverWait # type: ignore
 
 
 class Main(Login):
@@ -21,35 +20,18 @@ class Main(Login):
     numbers: list = []
     titles: list = []
     efforts: list = []
+    states: str = ""
 
     @classmethod
-    def main(cls, mail_, pass_, checks):
-        start_time = time.time()
+    def main(cls, mail_, pass_, states):
         cls.mail_ = mail_
         cls.pass_ = pass_
         cls.states = " "
         cls.total = 0
         cls.total_checked = 0
+        cls.states = states
+        cls.run_pipeline()
         
-        for chave, item in checks.items():
-            if item == True:
-                cls.states += chave + " "
-
-        try:
-            if len(cls.backlogs) > 0:
-                cls.backlogs.clear()
-                cls.backlogs.clear()
-                cls.comments.clear()
-                cls.numbers.clear()
-                cls.titles.clear()
-                cls.efforts.clear()
-            cls.run_pipeline()
-        finally:
-            cls.report_duration(start_time)
-            object_ = [cls.backlogs, cls.total, cls.total_checked]
-            return object_
-        
-
     @classmethod
     def run_pipeline(cls):
         cls.remove_xls()
@@ -71,8 +53,9 @@ class Main(Login):
         if _states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
 
-        states: list[str] = ""
+        states: list[str] = "" # type: ignore
         states: list[str] = _states.split(" ")
+        print(states)
 
         states_mapings: dict = {
             "New": (Constants.get_fields(1)),
@@ -105,7 +88,7 @@ class Main(Login):
                     cls.backlogs_element.extend("")
                     print(f"PBIs of the state: {state} it's null")
 
-                for number, title, effort in zip(numbers, titles, efforts):
+                for number, title, effort in zip(numbers, titles, efforts): # type: ignore
                     # print(number.text)
                     cls.total += 1
                     _effort = effort.text.replace("Effort\n", "")
