@@ -1,6 +1,6 @@
 ﻿<h1 align="center">
-  <img src="./logo.svg" height="300" width="300" alt="Tavura" /><br>
-  AlphaTask
+  <img src="./logo.svg" height="300" width="300" alt="Logo tavura"/><br>
+  Tavura
 </h1>
 
 ![GitHub License](https://img.shields.io/github/license/AndersonJader0/AlphaTask?labelColor=101010)
