@@ -7,7 +7,7 @@ from app.login import Login
 
 class GetBacklogs(Login):
     @classmethod
-    def getBacklogs(cls, states: str) -> None:
+    def get_backlogs(cls, states: str) -> dict:
         backlogs: list[dict]
         backlogs_element: list
 
@@ -69,3 +69,11 @@ class GetBacklogs(Login):
                                 "FEATURE": "NÃO",
                             }
                         )
+        encapsuled: list = []
+        encapsuled.append((backlogs, backlogs_element))
+        return encapsuled
+    
+    @classmethod
+    def get_pbi(cls, number) -> dict | None:
+        pbi = next((pbi for pbi in cls.backlogs if pbi["PBI"] == number), None)
+        return pbi

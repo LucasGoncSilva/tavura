@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from core.browser import Browser
+from app.browser import Browser
 
 
 class Login(Browser):
@@ -32,3 +32,7 @@ class Login(Browser):
             By.XPATH, "//input[@type='submit']"
         )
         stay_connected.click()
+
+    @classmethod
+    def quit_driver(cls):
+        cls.driver.quit()

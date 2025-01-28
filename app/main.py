@@ -7,8 +7,8 @@ from tkinter import * # type: ignore
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-from core.constants import Constants
-from core.login import Login
+from core.constants import Constants # type: ignore
+from core.login import Login # type: ignore
 from selenium.webdriver.support.expected_conditions import element_to_be_clickable
 from selenium.webdriver.support.ui import WebDriverWait # type: ignore
 
