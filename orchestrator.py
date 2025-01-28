@@ -1,7 +1,7 @@
-from app.manager import Manager
-from app.constants import Constants
-from app import constants
+from app.system.manager import Manager
+from app.system.constants import Constants
+from app.system import constants
 
 checks = "Committed Test"
 
-Manager.run_pipeline(constants.MAIL, constants.PASS, checks) # type: ignore
+Manager.run_pipeline(constants.MAIL, constants.PASS, checks)

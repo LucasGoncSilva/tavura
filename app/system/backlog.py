@@ -1,8 +1,8 @@
-from app.constants import Constants
+from app.system.constants import Constants
 from selenium.webdriver.common.by import By
-from core import constants
+from app.system import constants
 from time import sleep
-from app.login import Login
+from app.auth.login import Login
 
 
 class GetBacklogs(Login):

@@ -1,32 +1,35 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
-from app.browser import Browser
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from app.drivers.browser import Browser
 
 
 class Login(Browser):
     @classmethod
     def authenticate(cls, mail_, pass_):
-        cls.mail: str = mail_
-        cls.password: str = pass_
-
-        cls.link_browser('Chrome')
+        cls.link_browser('Firefox')
 
         mail_field: WebElement = cls.driver.find_element(
             By.XPATH, "//input[@type='email']"
         )
-        mail_field.send_keys(cls.mail)
+        mail_field.send_keys(mail_)
         mail_field.send_keys(Keys.ENTER)
 
         pass_field: WebElement = cls.driver.find_element(
             By.XPATH, "//input[@type='password']"
         )
-        pass_field.send_keys(cls.password)
+        pass_field.send_keys(pass_)
+    
+        WebDriverWait(cls.driver, 10).until(
+            EC.invisibility_of_element_located((By.CLASS_NAME, "inline-block button-item ext-button-item")
+        ))
 
-        btn_entrar: WebElement = cls.driver.find_element(
-            By.XPATH, "//input[@value='Entrar']"
+        btn_access = WebDriverWait(cls.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//input[@type='submit']"))
         )
-        btn_entrar.click()
+        btn_access.click()
 
         stay_connected: WebElement = cls.driver.find_element(
             By.XPATH, "//input[@type='submit']"

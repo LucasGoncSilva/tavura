@@ -1,10 +1,9 @@
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support.expected_conditions import element_to_be_clickable
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
-from app.login import Login
-from app import constants
+from app.auth.login import Login
+from app.system import constants
 
 
 class Comments(Login):

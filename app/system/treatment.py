@@ -1,4 +1,4 @@
-from app import constants
+from app.system import constants
 import re
 
 class Treatment():

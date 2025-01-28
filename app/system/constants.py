@@ -1,11 +1,10 @@
 from os import environ as env
-
 from dotenv import load_dotenv
 
 load_dotenv()
 
-MAIL = env.get("MAIL")
-PASS = env.get("PASS")
+MAIL = env.get("MAIL_")
+PASS = env.get("PASS_")
 
 class Constants():
     @classmethod
