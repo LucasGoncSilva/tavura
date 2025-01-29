@@ -1,15 +1,16 @@
-from app.system.constants import Constants
 from selenium.webdriver.common.by import By
-from app.system import constants
+from selenium.webdriver.remote.webelement import WebElement
 from time import sleep
+from app.system import constants
+from app.system.constants import Constants
 from app.auth.login import Login
 
 
 class GetBacklogs(Login):
     @classmethod
     def get_backlogs(cls, states: str) -> dict:
-        backlogs: list[dict]
-        backlogs_element: list
+        backlogs: list[dict] = []
+        backlogs_element: list[WebElement] = []
 
         if states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
@@ -47,6 +48,7 @@ class GetBacklogs(Login):
                     backlogs_element.extend("")
                     print(f"PBIs of the state: {state} it's null")
 
+
                 for number, title, effort in zip(numbers, titles, efforts):
                     _effort = effort.text.replace("Effort\n", "")
                     if _effort.isnumeric():
@@ -70,7 +72,8 @@ class GetBacklogs(Login):
                             }
                         )
         encapsuled: list = []
-        encapsuled.append((backlogs, backlogs_element))
+        encapsuled.append(backlogs)
+        encapsuled.append(backlogs_element)
         return encapsuled
     
     @classmethod
