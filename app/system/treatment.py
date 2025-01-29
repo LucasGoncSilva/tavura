@@ -4,13 +4,14 @@ import re
 class Treatment():
     @classmethod
     def remove_garbage(cls, backlogs) -> dict:
-        backlog_: list[dict]
+        backlogs_: list[dict] = backlogs
         sustentacao = constants.SUSTENTACAO
-        for backlog in backlogs:
+        for backlog in backlogs_:
             description: str = re.sub(sustentacao, "", backlog["DESCRIÇÃO"])
-            backlog_.update({"DESCRIÇÃO": description})
+            backlog.update({"DESCRIÇÃO": description})
 
-        return backlog_
+        print(backlogs_)
+        return backlogs_
 
     def ordenate(cls, backlogs) -> list[dict]:
         return sorted(backlogs) #Develop

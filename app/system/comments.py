@@ -10,17 +10,17 @@ from time import sleep
 
 class Comments(Login):
     @classmethod
-    def validate_backlogs(cls, backlogs) -> None:
+    def validate_backlogs(cls, backlogs) -> dict:
         comments = []
         approved_comments: list[str] = str(constants.APPROVEDS_COMMENTS).split()
         action = ActionChains(cls.driver)
         wait = WebDriverWait(cls.driver, 10)
 
         for backlog in backlogs[1]:
-            cls.driver.implicitly_wait(.9)
+            cls.driver.implicitly_wait(.3)
             wait.until(element_to_be_clickable(backlog))
             cls.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", backlog)
-            sleep(.5)
+            #sleep(.3)
             action.move_to_element(backlog).click().perform()
             comments = cls.driver.find_elements(
                 By.XPATH, constants.COMMENTS
@@ -52,6 +52,7 @@ class Comments(Login):
                         elif "prod" in approved:
                             pbi.update({"STATUS": "PROD: OK"})
             cls.driver.back()
+        return backlogs[0]
 
     @classmethod
     def get_pbi(cls, number, backlogs) -> dict | None:
