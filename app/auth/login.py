@@ -9,7 +9,8 @@ from app.drivers.browser import Browser
 class Login(Browser):
     @classmethod
     def authenticate(cls, mail_, pass_):
-        cls.link_browser('Firefox')
+        # Firefox | Edge | Chrome
+        cls.link_browser('Edge')
 
         mail_field: WebElement = cls.driver.find_element(
             By.XPATH, "//input[@type='email']"

@@ -17,7 +17,7 @@ class Comments(Login):
         wait = WebDriverWait(cls.driver, 10)
 
         for backlog in backlogs[1]:
-            cls.driver.implicitly_wait(.3)
+            cls.driver.implicitly_wait(3)
             wait.until(element_to_be_clickable(backlog))
             cls.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", backlog)
             #sleep(.3)

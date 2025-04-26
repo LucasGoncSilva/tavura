@@ -7,6 +7,9 @@ from app.auth.login import Login
 
 
 class GetBacklogs(Login):
+    numbers = []
+    titles = []
+    efforts = []
     @classmethod
     def get_backlogs(cls, states: str) -> dict:
         backlogs: list[dict] = []
@@ -21,7 +24,7 @@ class GetBacklogs(Login):
             "New": (Constants.get_fields(1)),
             "Approved": (Constants.get_fields(2)),
             "Committed": (Constants.get_fields(3)),
-            "External": (Constants.get_fields(4),),
+            "External": (Constants.get_fields(4)),
             "Test": (Constants.get_fields(5)),
             "Accepted": (Constants.get_fields(6)),
             "Review": (Constants.get_fields(7)),
@@ -29,27 +32,28 @@ class GetBacklogs(Login):
         }
 
         """Necessary sleep to work"""
-        sleep(3) 
+        sleep(5) 
         for state in constants.backlogs_states:
             if state in _states and state in states_mapings.keys(): #Desnecessary state in states_mapings.keys()
                 try:
                     cls.driver.implicitly_wait(2)
-                    numbers = cls.driver.find_elements(
+                    cls.numbers = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][0]
                     )
-                    titles = cls.driver.find_elements(
+                    cls.titles = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][1]
                     )
-                    efforts = cls.driver.find_elements(
+                    cls.efforts = cls.driver.find_elements(
                         By.XPATH, states_mapings[state][2]
                     )
-                    backlogs_element.extend(numbers)
+                    backlogs_element.extend(cls.titles)
                 except:
                     backlogs_element.extend("")
                     print(f"PBIs of the state: {state} it's null")
 
 
-                for number, title, effort in zip(numbers, titles, efforts):
+                for number, title, effort in zip(cls.numbers, cls.titles, cls.efforts):
+                    print('oi')
                     _effort = effort.text.replace("Effort\n", "")
                     if _effort.isnumeric():
                         backlogs.append(

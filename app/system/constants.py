@@ -9,9 +9,9 @@ PASS = env.get("PASS_")
 class Constants():
     @classmethod
     def get_fields(cls, number):
-        FIELD_NUMBERS: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/span/a/span[2]'
-        FIELD_TITLES: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/span/a/span[3]'
-        FIELD_EFFORT: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/div/div[2]'
+        FIELD_NUMBERS: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/span/div/span[2]'
+        FIELD_TITLES: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div/span/div/a/span'
+        FIELD_EFFORT: str = f'//div[@class="flex-column flex-grow kanban-board-column padding-bottom-8"][{number}]/div/div[2]/div/div[2]/div/div[2]/div'
         return (FIELD_NUMBERS, FIELD_TITLES, FIELD_EFFORT)
     
 backlogs_states: list = [
