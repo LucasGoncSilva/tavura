@@ -1,0 +1,35 @@
+[project]
+name = "tavura"
+authors = [{ name = "Anderson Jader", email = "anderson.filho@onr.org.br" }]
+maintainers = [{ name = "Anderson Jader", email = "anderson.filho@onr.org.br" }]
+version = "0.1.0"
+description = "A automação percorre os work items registrados no Azure DevOps, com foco específico nos PBIs, coletando dados essenciais."
+readme = { content-type = "text/markdown", file = ".github/README.md" }
+requires-python = ">=3.13"
+dependencies = [
+    "openpyxl>=3.1.5",
+    "pandas>=2.2.3",
+    "python-dotenv>=1.1.0",
+    "selenium>=4.32.0",
+]
+
+[dependency-groups]
+dev = ["ruff>=0.11.8"]
+
+[tool.ruff]
+line-length = 88
+exclude = [".env", "migrations"]
+fix = true
+
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = ["I", "E", "UP", "F"]
+fixable = ["ALL"]
+exclude = ["*/constants.py"]
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+lines-after-imports = 2
