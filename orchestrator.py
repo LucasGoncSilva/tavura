@@ -1,7 +1,11 @@
-from app.system import constants
+from typing import cast
+
+from app.system.constants import MAIL, PASS
 from app.system.manager import Manager
 
 
-checks = 'Review Committed Test'
+# New Approved Committed External Test Accepted Review Done
 
-Manager.run_pipeline(constants.MAIL, constants.PASS, checks)
+checks = 'Accepted'
+
+Manager.run_pipeline(cast(str, MAIL), cast(str, PASS), checks)

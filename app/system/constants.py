@@ -1,13 +1,16 @@
 from os import environ as env
+from re import compile, IGNORECASE, VERBOSE
 from dotenv import load_dotenv
 
 load_dotenv()
 
-MAIL = env.get('MAIL_')
-PASS = env.get('PASS_')
+MAIL: str | None = env.get('MAIL_')
+PASS: str | None = env.get('PASS_')
 
 if any(map(lambda x: x is None, [MAIL, PASS])):
-    raise TypeError(f'Expected "MAIL" and "PASS" to be string, got "{type(MAIL)}", "{type(PASS)}"')
+    raise TypeError(
+        f'Expected "MAIL" and "PASS" to be string, got "{type(MAIL)}", "{type(PASS)}"'
+    )
 
 
 class Constants:
@@ -43,3 +46,18 @@ COMMENTS: str = "//div[@class='comment-item flex-row displayed-comment depth-8 m
 FEATURES: str = "//div[@class='artifact-link-id secondary-text margin-right-4']"
 
 SUSTENTACAO: str = 'Sustentação - |Sustentação-|Sustentação -|Sustentação- |sustentação - |sustentação-|sustentação -|sustentação- |sustentacao - |sustentacao-|sustentacao- |sustentacao -|sustentacão - |sustentacao-|sustentacao- |sustentacao -|- Q1|- Q2|- Q3|-Q1|-Q2|-Q3| Q1|Q 1|Q - 1|Q-1|Q -1|Q-|q1|q 1|q - 1|q-1|q -1| Q1| Q 1| Q - 1| Q-1| Q -1| Q- 1| q1| q 1| q - 1| q-1| q -1|____|Q2|Q 2|Q - 2|Q-2|Q -2|Q- 2|q2|q 2|q - 2|q-2|q -2| Q2| Q 2| Q - 2| Q-2| Q -2| Q- 2| q2| q 2| q - 2| q-2| q -2|____|Q3|Q 3|Q - 3|Q-3|Q -3|Q- 3|q3|q 3|q - 3|q-3|q -3| Q3| Q 3| Q - 3| Q-3| Q -3| Q- 3| q3| q 3| q - 3| q-3| q -3|'
+
+SUST_REGEX = compile(
+    r"""^(
+        (sustenta[cç][aã]o\s*-\s*)|                         # Sustentação com variações de acento e espaço/hífen
+        (-\s*Q[1-3])|                                       # -Q1, - Q2 etc.
+        (Q\s*-\s*[1-3])|                                    # Q - 1 etc.
+        (Q\s*[1-3])|                                        # Q1, Q 2 etc.
+        (q\s*-\s*[1-3])|                                    # q - 1 etc.
+        (q\s*[1-3])|                                        # q1, q 3 etc.
+        (Q-\s*[1-3])|                                       # Q- 2 etc.
+        (q-\s*[1-3])|                                       # q- 3 etc.
+        (____)                                              # underline literal
+    )$""",
+    IGNORECASE | VERBOSE,
+)
