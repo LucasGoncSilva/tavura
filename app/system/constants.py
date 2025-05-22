@@ -2,10 +2,11 @@ from os import environ as env
 from re import compile, IGNORECASE, VERBOSE
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
-MAIL: str | None = env.get('MAIL_')
-PASS: str | None = env.get('PASS_')
+MAIL: str | None = env.get('MAIL')
+PASS: str | None = env.get('PASS')
 
 if any(map(lambda x: x is None, [MAIL, PASS])):
     raise TypeError(

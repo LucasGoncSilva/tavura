@@ -1,3 +1,5 @@
+from os import getenv
+
 from selenium.webdriver import (
     Chrome,
     ChromeOptions,
@@ -19,7 +21,8 @@ class Browser:
         }
 
         options = browsers[browser][1]()
-        # options.add_argument('-headless')
+        if getenv('HEADLESS'):
+            options.add_argument('-headless')
 
         cls.driver: WebDriver = browsers[browser][0](options)
         cls.driver.get(
