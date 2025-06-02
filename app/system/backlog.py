@@ -1,3 +1,4 @@
+from logging import Logger, getLogger
 from time import sleep
 
 from selenium.webdriver.common.by import By
@@ -8,20 +9,23 @@ from app.system import constants
 from app.system.constants import Constants
 
 
+logger: Logger = getLogger('tavura')
+
+
 class GetBacklogs(Login):
     numbers = []
     titles = []
     efforts = []
 
     @classmethod
-    def get_backlogs(cls, states: str | None) -> list[dict[str, str | WebElement]]:
+    def get_backlogs(
+        cls, states: list[str] | None
+    ) -> list[dict[str, str | WebElement]]:
         backlogs: list[dict[str, str]] = []
         backlogs_element: list[WebElement] = []
 
         if states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
-
-        _states: list[str] = states.split(' ')
 
         states_mapings: dict[str, tuple[str, str, str]] = {
             'New': Constants.get_fields(0),
@@ -37,7 +41,8 @@ class GetBacklogs(Login):
         """Necessary sleep to work"""
         sleep(5)
         for state in constants.backlogs_states:
-            if state in _states and state in states_mapings.keys():
+            if state in states and state in states_mapings.keys():
+                logger.info(f'Iterating {state} PBIs')
                 try:
                     cls.driver.implicitly_wait(2)
                     cls.numbers = cls.driver.find_elements(
@@ -55,7 +60,10 @@ class GetBacklogs(Login):
                     print(f"PBIs of the state: {state} it's null")
 
                 for number, title, effort in zip(cls.numbers, cls.titles, cls.efforts):
+                    logger.debug(f'Adding PBI: {number.text}')
+
                     _effort = effort.text.replace('Effort\n', '')
+
                     if _effort.isnumeric():
                         backlogs.append(
                             {
@@ -76,6 +84,7 @@ class GetBacklogs(Login):
                                 'FEATURE': 'NÃO',
                             }
                         )
+
         encapsuled: list[dict[str, str] | WebElement] = []
         encapsuled.append(backlogs)
         encapsuled.append(backlogs_element)

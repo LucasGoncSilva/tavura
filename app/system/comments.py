@@ -1,3 +1,4 @@
+from logging import Logger, getLogger
 from typing import Literal
 
 from selenium.webdriver.common.action_chains import ActionChains
@@ -10,6 +11,9 @@ from app.auth.login import Login
 from app.system.constants import APPROVEDS_COMMENTS, COMMENTS, FEATURES
 
 
+logger: Logger = getLogger('tavura')
+
+
 class Comments(Login):
     @classmethod
     def validate_backlogs(
@@ -20,7 +24,11 @@ class Comments(Login):
         wait = WebDriverWait(cls.driver, 10)
         feature: WebElement | Literal[' ']
 
-        for backlog in backlogs[1]:
+        for i in range(0, len(backlogs[0])):
+            logger.debug(f'Confirming PBI {backlogs[0][i]["PBI"]}')
+
+            backlog = backlogs[1][i]
+
             cls.driver.implicitly_wait(3)
             wait.until(element_to_be_clickable(backlog))
 

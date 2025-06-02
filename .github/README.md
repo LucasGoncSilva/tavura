@@ -1,11 +1,11 @@
 ﻿<h1 align="center">
-  <img src="./logo.svg" height="300" width="300" alt="Logo tavura"/><br>
+  <img src="./assets/tavura.png" height="300" width="300" alt="Logo tavura"/><br>
   Tavura
 </h1>
 
-![GitHub License](https://img.shields.io/github/license/AndersonJader0/AlphaTask?labelColor=101010)
+![GitHub License](https://img.shields.io/github/license/AndersonJader0/tavura?labelColor=101010)
 
-<!-- ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AndersonJader0/AlphaTask/XXXXXX.yml?style=flat&labelColor=%23101010) -->
+<!-- ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AndersonJader0/tavura/XXXXXX.yml?style=flat&labelColor=%23101010) -->
 
 Este projeto de código aberto foi desenvolvido para facilitar o gerenciamento de Product Backlog Items (PBIs) no Azure DevOps. A ferramenta automatiza a coleta e organização de dados, oferecendo uma visão consolidada dos itens do backlog em um relatório Excel, ideal para análise e planejamento por equipes de sustentação.
 
@@ -35,10 +35,54 @@ A ferramenta foi projetada com foco em equipes de sustentação de empresas, que
 ![Selenium](https://img.shields.io/badge/selenium-338221?style=for-the-badge&logo=selenium&logoColor=white)
 ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
 
-<!-- ![Azure](https://img.shields.io/badge/azure%20devops-%230072C6?style=for-the-badge&logo=devops&logoColor=white) -->
+![Azure](https://img.shields.io/badge/azure%20devops-%230072C6?style=for-the-badge&logo=devops&logoColor=white)
 
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
-![Ruff logo](https://img.shields.io/badge/Ruff-2b0231?style=for-the-badge&logo=ruff)
+![Ruff](https://img.shields.io/badge/Ruff-2b0231?style=for-the-badge&logo=ruff)
+
+## Running
+
+Após instalar a ferramenta [uv](https://docs.astral.sh/uv/) - gerenciadora de projeto e dependências - e sincronizar com `uv sync` basta seguir os comando a seguir utilizando as flags abaixo conforme necessidade:
+
+|     Flag     |               Uso                | Função                                   |
+| :----------: | :------------------------------: | :--------------------------------------- |
+| `--verbose`  |          `--verbose 3`           | Nível de log (0 = silencioso, 4 = debug) |
+|  `--states`  | `--states Committed Test Review` | States a serem mapeados                  |
+| `--headless` |         `--states true`          | Emulação do navegador em tela            |
+
+### Manual
+
+```sh
+uv run -m app.main -h
+# ou
+uv run -m app.main --help
+```
+
+### Padrão
+
+```sh
+uv run -m app.main  # Retornará as tarefas com state Committed, Test e Review
+```
+
+### States Específicos
+
+```sh
+uv run -m app.main --states New Accepted  # Retornará as tarefas com state New e Accepted
+```
+
+### Emulação
+
+```sh
+uv run -m app.main --headless false  # Executará com emulação ativa, renderizando o navegador
+```
+
+### Verbosidade
+
+```sh
+uv run -m app.main --verbose 0  # Executará em modo silencioso
+# ou
+uv run -m app.main --verbose 4  # Executará em modo debug
+```
 
 ## Licença
 
