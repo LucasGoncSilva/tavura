@@ -1,4 +1,9 @@
-from argparse import ArgumentParser, Namespace, RawDescriptionHelpFormatter
+from argparse import (
+    ArgumentParser,
+    ArgumentTypeError,
+    Namespace,
+    RawDescriptionHelpFormatter,
+)
 from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING, basicConfig, getLogger
 from typing import Final, cast
 
@@ -15,6 +20,7 @@ def set_logging_config(v: int = 3) -> None:
     level `v` controls the logging granularity for the `tavura` logger.
 
     :param v: Verbosity level, from 0 (critical) to 4 (debug). Defaults to 3 (info).
+
         - 0: Critical
         - 1: Error
         - 2: Warning
@@ -23,6 +29,7 @@ def set_logging_config(v: int = 3) -> None:
     :type v: int
     :returns: None.
     :rtype: None
+    :raises: None
     """
 
     basicConfig(
@@ -45,6 +52,32 @@ def set_logging_config(v: int = 3) -> None:
             getLogger('tavura').setLevel(INFO)
 
 
+def str2bool(t: str | bool) -> bool:
+    """
+    Evaluate the token provided and return it's bool equivalent
+
+    By receiving a token, returns the boolean equivalent based on some attributes:
+        - `True`: `True`, `'yes'`, `'true'`, `'t'`, `'y'`, `'1'`
+        - `False`: `False`, `'no'`, `'false'`, `'f'`, `'n'`, `'0'`
+
+    :param t: The token to be evaluated as boolean.
+    :type t: str | bool
+    :returns: Bool interpretation of the token provided.
+    :rtype: bool
+    :raises: ArgumentTypeError
+    """
+    if isinstance(t, bool):
+        return t
+
+    else:
+        if t.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif t.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+
+    raise ArgumentTypeError('Boolean value expected.')
+
+
 def main() -> None:
     """
     This is the script's entrypoint, kinda where everything starts.
@@ -53,7 +86,9 @@ def main() -> None:
     them. Parsing the args, extracts the infos provided to deal and construct the
     output doc based on them.
 
+    :returns: None.
     :rtype: None
+    :raises: None
     """
 
     # Parser Creation
@@ -72,7 +107,7 @@ def main() -> None:
     )
     parser.add_argument(
         '--headless',
-        type=bool,
+        type=str2bool,
         default=True,
         help='Defines if browser should be emulated or not.',
     )
@@ -108,7 +143,7 @@ def main() -> None:
             f'Every state in "--states" must be in {expected}, got {STATES}.'
         )
 
-    HEADLESS: list[str] = args.headless
+    HEADLESS: bool = str2bool(args.headless)
     logger.debug(f'{HEADLESS = }')
 
     logger.info('Arguments parsed successfully')

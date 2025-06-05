@@ -1,5 +1,5 @@
 from logging import Logger, getLogger
-from typing import Literal
+from typing import Literal, Self, cast
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -17,7 +17,7 @@ logger: Logger = getLogger('tavura')
 class Comments(Login):
     @classmethod
     def validate_backlogs(
-        cls, backlogs: list[dict[str, str | WebElement]]
+        cls: type[Self], backlogs: list[list[dict[str, str]] | list[WebElement | str]]
     ) -> list[dict[str, str | WebElement]]:
         comments: list[WebElement] = []
         action: ActionChains = ActionChains(cls.driver)
@@ -25,9 +25,9 @@ class Comments(Login):
         feature: WebElement | Literal[' ']
 
         for i in range(0, len(backlogs[0])):
-            logger.debug(f'Confirming PBI {backlogs[0][i]["PBI"]}')
+            logger.debug(f'Confirming PBI {backlogs[0][i]["PBI"]}')  # type: ignore
 
-            backlog = backlogs[1][i]
+            backlog: WebElement = cast(WebElement, backlogs[1][i])
 
             cls.driver.implicitly_wait(3)
             wait.until(element_to_be_clickable(backlog))
@@ -45,7 +45,7 @@ class Comments(Login):
                 feature = ' '
 
             if feature != ' ' and '11119' in feature.text:
-                pbi = cls.get_pbi(backlog.text, backlogs[0])
+                pbi: dict[str, str] | None = cls.get_pbi(backlog.text, backlogs[0])  # type: ignore
                 if pbi:
                     pbi.update({'FEATURE': 'SIM'})
 
@@ -55,18 +55,18 @@ class Comments(Login):
                     approved in comment.text.lower().replace(' ', '')
                     for comment in comments
                 ):
-                    pbi = cls.get_pbi(backlog.text, backlogs[0])
+                    pbi = cls.get_pbi(backlog.text, backlogs[0])  # type: ignore
                     if pbi:
                         if 'pre' in approved:
                             pbi.update({'STATUS': 'PRE: OK'})
                         elif 'prod' in approved:
                             pbi.update({'STATUS': 'PROD: OK'})
             cls.driver.back()
-        return backlogs[0]
+        return backlogs[0]  # type: ignore
 
     @classmethod
     def get_pbi(
-        cls, number: str, backlogs: list[dict[str, str | WebElement]]
+        cls: type[Self], number: str, backlogs: list[dict[str, str | WebElement]]
     ) -> dict[str, str] | None:
         pbi = next((pbi for pbi in backlogs if pbi['PBI'] == number), None)
-        return pbi
+        return pbi  # type: ignore

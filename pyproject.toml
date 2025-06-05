@@ -1,21 +1,24 @@
 [project]
 name = "tavura"
 authors = [{ name = "Anderson Jader", email = "anderson.filho@onr.org.br" }]
-maintainers = [{ name = "Anderson Jader", email = "anderson.filho@onr.org.br" }]
-version = "0.1.0"
+maintainers = [
+    { name = "Anderson Jader", email = "anderson.filho@onr.org.br" },
+    { name = "Lucas Silva", email = "lucas.silva@onr.org.br" },
+]
+version = "0.1.1"
 description = "A automação percorre os work items registrados no Azure DevOps, com foco específico nos PBIs, coletando dados essenciais."
 readme = { content-type = "text/markdown", file = ".github/README.md" }
 requires-python = ">=3.13"
 dependencies = [
     "openpyxl>=3.1.5",
-    "pandas>=2.2.3",
+    "pandas>=2.3.0",
     "python-dotenv>=1.1.0",
     "rich>=14.0.0",
-    "selenium>=4.32.0",
+    "selenium>=4.33.0",
 ]
 
 [dependency-groups]
-dev = ["ruff>=0.11.8"]
+dev = ["ruff>=0.11.12"]
 
 
 [project.scripts]

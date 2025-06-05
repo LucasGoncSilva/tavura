@@ -1,3 +1,5 @@
+from typing import Self
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -9,7 +11,7 @@ from app.drivers.browser import Browser
 
 class Login(Browser):
     @classmethod
-    def authenticate(cls, mail_: str, pass_: str) -> None:
+    def authenticate(cls: type[Self], mail_: str, pass_: str) -> None:
         # Firefox | Edge | Chrome
         cls.link_browser('Chrome')
 
@@ -41,5 +43,5 @@ class Login(Browser):
         stay_connected.click()
 
     @classmethod
-    def quit_driver(cls):
+    def quit_driver(cls: type[Self]):
         cls.driver.quit()

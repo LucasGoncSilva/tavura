@@ -1,5 +1,6 @@
 from logging import Logger, getLogger
 from time import sleep
+from typing import Self
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -13,16 +14,29 @@ logger: Logger = getLogger('tavura')
 
 
 class GetBacklogs(Login):
-    numbers = []
-    titles = []
-    efforts = []
+    numbers: list[WebElement] = []
+    titles: list[WebElement] = []
+    efforts: list[WebElement] = []
 
     @classmethod
     def get_backlogs(
-        cls, states: list[str] | None
-    ) -> list[dict[str, str | WebElement]]:
+        cls: type[Self], states: list[str] | None
+    ) -> list[list[dict[str, str]] | list[WebElement | str]]:
+        """
+        Gets product backlog items based on provided `states`.
+
+        Gets and returns a matrix containing every found PBI with same state as the
+        expected ones, with their title, effort and last comment
+
+        :param states: PBIs states to be tracked
+        :type states: list[str] | None
+        :returns: Matrix of backlogs
+        :rtype: list[list[dict[str, str]] | list[WebElement | str]]
+        :raises: TypeError
+        """
+
         backlogs: list[dict[str, str]] = []
-        backlogs_element: list[WebElement] = []
+        backlogs_element: list[WebElement | str] = []
 
         if states is None:
             raise TypeError("Expected 'STATUS' to be localized PBIs but found NoneType")
@@ -40,7 +54,7 @@ class GetBacklogs(Login):
 
         """Necessary sleep to work"""
         sleep(5)
-        for state in constants.backlogs_states:
+        for state in constants.BACKLOGS_STATES:
             if state in states and state in states_mapings.keys():
                 logger.info(f'Iterating {state} PBIs')
                 try:
@@ -69,7 +83,7 @@ class GetBacklogs(Login):
                             {
                                 'PBI': number.text,
                                 'DESCRIÇÃO': title.text,
-                                'STATUS': ' ',
+                                'STATUS': 'NotImplementedError',
                                 'EFFORT': _effort,
                                 'FEATURE': 'NÃO',
                             }
@@ -79,18 +93,13 @@ class GetBacklogs(Login):
                             {
                                 'PBI': number.text,
                                 'DESCRIÇÃO': title.text,
-                                'STATUS': ' ',
+                                'STATUS': 'NotImplementedError',
                                 'EFFORT': 'N/A',
                                 'FEATURE': 'NÃO',
                             }
                         )
 
-        encapsuled: list[dict[str, str] | WebElement] = []
+        encapsuled: list[list[dict[str, str]] | list[WebElement | str]] = []
         encapsuled.append(backlogs)
         encapsuled.append(backlogs_element)
         return encapsuled
-
-    @classmethod
-    def get_pbi(cls, number) -> dict | None:
-        pbi = next((pbi for pbi in cls.backlogs if pbi['PBI'] == number), None)
-        return pbi

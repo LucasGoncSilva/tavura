@@ -1,4 +1,5 @@
 from logging import Logger, getLogger
+from typing import Self
 
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -14,15 +15,43 @@ logger: Logger = getLogger('tavura')
 
 class Manager:
     @classmethod
-    def run_pipeline(cls, mail_: str, pass_: str, states: list[str]) -> None:
+    def run_pipeline(
+        cls: type[Self], mail: str, passwrd: str, states: list[str]
+    ) -> None:
+        """
+        Orchestrates the automation flow, step by step.
+
+        Going step by step, this method defines the flow for the entire automation,
+        following the following:
+
+            - Old report dealing
+            - Bot auth using user credentials
+            - Backlogs tracking based on `states` defined
+            - Comments sanitization
+            - Garbage removing
+            - Report generation
+
+        :param mail: User login email
+        :type mail: str
+        :param passwrd: User login password
+        :type passwrd: str
+        :param states: PBIs states to be tracked
+        :type states: list[str]
+        :returns: None.
+        :rtype: None
+        :raises: None
+        """
+
         logger.info('Handling old report version')
         Excel.remove_xls()
 
         logger.info('Authenticating into system')
-        Login.authenticate(mail_, pass_)
+        Login.authenticate(mail, passwrd)
 
         logger.info('Tracking PBIs')
-        backlogs: list[dict[str, str | WebElement]] = GetBacklogs.get_backlogs(states)
+        backlogs: list[list[dict[str, str]] | list[WebElement | str]] = (
+            GetBacklogs.get_backlogs(states)
+        )
 
         logger.info('Confirming each PBI')
         backlogs_validated: list[dict[str, str | WebElement]] = (
